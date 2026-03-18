@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>book_koybo</title>
+
+    <link rel="stylesheet" href="./css/reset.css">
+    <link rel="stylesheet" href="./css/common.css">
+    <link rel="stylesheet" href="./css/layout.css">
+    <link rel="stylesheet" href="./css/sub.css">
+</head>
+
+<body>
+    <div id="header-include"></div>
+
+    <main class="sub_page">
+        <div class="inner">
+
+            <!-- breadcrumb -->
+            <nav class="sub_breadcrumb" aria-label="breadcrumb">
+                <a href="./index.html">홈</a>
+                <span class="breadcrumb_arrow">›</span>
+                <a href="#">국내도서</a>
+                <span class="breadcrumb_arrow">›</span>
+                <a href="#">분야 준비 중</a>
+            </nav>
+
+            <!-- title area -->
+            <section class="sub_title_area">
+                <div class="sub_title_inner">
+                    <div class="sub_title_box">
+                        <h2 class="sub_book_title" id="subTitle">도서명</h2>
+                    </div>
+
+                    <button type="button" class="sub_share_btn" aria-label="공유하기">⤴</button>
+                </div>
+
+                <div class="sub_type_tabs">
+                    <button type="button" class="type_tab active">
+                        <span class="type_name">국내도서</span>
+                        <span class="type_price" id="subSalePrice">0원</span>
+                    </button>
+
+                    <button type="button" class="type_tab">
+                        <span class="type_name">eBook</span>
+                        <span class="type_price">준비중</span>
+                    </button>
+                </div>
+            </section>
+
+            <!-- top detail -->
+            <section class="sub_detail_top">
+
+                <!-- left meta -->
+                <aside class="sub_meta_left">
+                    <div class="meta_author_box">
+                        <p class="meta_author" id="subStatus">판매중</p>
+                        <p class="meta_publish" id="subMeta">저자 · 출판사 · 출간일</p>
+                        <p class="meta_publish" id="subIsbn">ISBN</p>
+                    </div>
+
+                    <div class="meta_badge_row">
+                        <span class="meta_best_badge">BOOK</span>
+                        <span class="meta_best_text">상세 정보</span>
+                    </div>
+
+                    <div class="meta_review_box">
+                        <div class="meta_review_item">
+                            <strong class="review_score">9.9</strong>
+                            <p class="review_label">평점</p>
+                            <span class="review_sub">(샘플 UI)</span>
+                        </div>
+
+                        <div class="meta_review_divider"></div>
+
+                        <div class="meta_review_item">
+                            <strong class="review_keyword">좋아요</strong>
+                            <p class="review_label">구매자 반응</p>
+                            <span class="review_sub">(샘플 UI)</span>
+                        </div>
+                    </div>
+                </aside>
+
+                <!-- center cover -->
+                <section class="sub_cover_center">
+                    <div class="sub_cover_image_box" id="subCoverArea"></div>
+
+                    <div class="sub_cover_pager">
+                        <button type="button" class="pager_btn" aria-label="이전">‹</button>
+                        <span class="pager_num">01</span>
+                        <span class="pager_dash">·</span>
+                        <span class="pager_total">01</span>
+                        <button type="button" class="pager_btn" aria-label="다음">›</button>
+                    </div>
+
+                    <div class="sub_preview_btns">
+                        <button type="button" class="preview_btn">미리보기</button>
+                        <button type="button" class="preview_btn">eBook 미리보기</button>
+                    </div>
+                </section>
+
+                <!-- right purchase -->
+                <aside class="sub_purchase_right">
+                    <div class="purchase_badges">
+                        <span>무료배송</span>
+                        <span>이벤트</span>
+                        <span>소득공제</span>
+                    </div>
+
+                    <div class="purchase_price_box">
+                        <p class="purchase_price_main">
+                            <span class="discount_rate">SALE</span>
+                            <strong class="sale_price" id="subSalePrice">0원</strong>
+                            <span class="origin_price" id="subPrice">0원</span>
+                        </p>
+                    </div>
+
+                    <div class="purchase_info_list">
+                        <div class="purchase_info_row">
+                            <span class="info_title">적립/혜택</span>
+                            <span class="info_value point">적립 예정</span>
+                        </div>
+
+                        <div class="purchase_info_row">
+                            <span class="info_title">배송안내</span>
+                            <span class="info_value">무료배송</span>
+                        </div>
+
+                        <div class="purchase_delivery_box">
+                            <p class="delivery_badge">안내</p>
+                            <p class="delivery_text">배송 정보는 추후 연결 예정</p>
+                            <p class="delivery_sub">기본배송지 기준</p>
+                        </div>
+                    </div>
+
+                    <div class="purchase_event_box">
+                        <p class="event_text">로그인 후 정확한 배송 안내를 받아보세요!</p>
+                        <div class="event_banner">
+                            <p>이달의 이벤트와 함께 책을 만나보세요.</p>
+                            <button type="button">자세히 보기</button>
+                        </div>
+                    </div>
+
+                    <div class="purchase_alarm_box">
+                        <p>알림 신청하시면 원하시는 정보를 받아보실 수 있습니다.</p>
+                        <button type="button" class="alarm_btn">알림신청</button>
+                    </div>
+
+                    <button type="button" class="stock_btn">매장 재고 · 위치</button>
+
+                    <div class="purchase_quantity_box">
+                        <span class="qty_label">수량</span>
+                        <div class="qty_control">
+                            <button type="button" class="qty_btn" id="qtyMinus">-</button>
+                            <input type="text" id="qtyInput" value="1" readonly>
+                            <button type="button" class="qty_btn" id="qtyPlus">+</button>
+                        </div>
+                    </div>
+
+                    <div class="purchase_total_box">
+                        <span class="total_label">총 상품 금액</span>
+                        <strong class="total_price" id="totalPrice">0원</strong>
+                    </div>
+
+                    <div class="purchase_action_btns">
+                        <button type="button" class="action_btn btn_wish">찜</button>
+                        <button type="button" class="action_btn btn_cart">장바구니</button>
+                        <button type="button" class="action_btn btn_buy">바로구매</button>
+                    </div>
+                </aside>
+            </section>
+
+            <!-- detail section -->
+            <section class="sub_detail_section">
+                <div class="sub_detail_tab_menu detail_tab_menu">
+                    <button type="button" class="detail_tab active">책소개</button>
+                    <button type="button" class="detail_tab">리뷰</button>
+                    <button type="button" class="detail_tab">교환/반품</button>
+                </div>
+
+                <div class="sub_detail_contents">
+                    <article class="detail_panel active">
+                        <h3 class="detail_title">책 소개</h3>
+                        <p class="detail_text" id="subContents"></p>
+                    </article>
+
+                    <article class="detail_panel active">
+                        <h3 class="detail_title">상세 소개</h3>
+                        <p class="detail_text" id="subContentsDetail"></p>
+                    </article>
+                </div>
+            </section>
+
+        </div>
+    </main>
+
+    <div id="footer-include"></div>
+
+    <script src="./js/header.js"></script>
+    <script src="./js/footer.js"></script>
+    <script src="./js/common.js"></script>
+    <script src="./js/sub.js"></script>
+</body>
+
+</html>

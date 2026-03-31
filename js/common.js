@@ -25,7 +25,8 @@ async function loadIncludes() {
     loadHTML("#main-books02-include", "./fragments/main_books02.html"),
     loadHTML("#main-best-include", "./fragments/main_best.html"),
     loadHTML("#mdpick-include", "./fragments/mdpick.html"),
-    loadHTML("#footer-include", "./fragments/footer.html")
+    loadHTML("#event-include", "./fragments/event.html"),
+    loadHTML("#footer-include", "./fragments/footer.html"),
   ]);
 
   if (typeof initHeader === "function") initHeader();
@@ -33,7 +34,9 @@ async function loadIncludes() {
   if (typeof initMainBooks === "function") initMainBooks();
   if (typeof initMainBest === "function") initMainBest();
   if (typeof initMdPick === "function") initMdPick();
+  if (typeof initEventSection === "function") initEventSection();
   if (typeof initFooter === "function") initFooter();
+  if (typeof initMainBooks02 === "function") initMainBooks02();
 }
 
 document.addEventListener("DOMContentLoaded", loadIncludes);

@@ -22,12 +22,16 @@ function getQueryParam(name) {
 
 function getDisplayIsbn(isbnString) {
   if (!isbnString) return "-";
-  const parts = isbnString.split(" ").filter(Boolean);
+  const parts = String(isbnString).split(" ").filter(Boolean);
   return parts[parts.length - 1] || isbnString;
 }
 
 function normalizeDigits(value) {
   return String(value || "").replace(/\D/g, "");
+}
+
+function normalizeText(value) {
+  return String(value || "").replace(/\s+/g, "").trim();
 }
 
 function getHighResImageUrl(thumbnailUrl) {
@@ -56,7 +60,7 @@ async function fetchBookByIsbn(isbn) {
       headers: {
         Authorization: `KakaoAK ${KAKAO_REST_API_KEY}`,
       },
-    },
+    }
   );
 
   if (!response.ok) {
@@ -73,20 +77,142 @@ async function fetchBookByIsbn(isbn) {
 
   const matchedBook =
     data.documents.find((book) =>
-      normalizeDigits(book.isbn).includes(targetDigits),
+      normalizeDigits(book.isbn).includes(targetDigits)
     ) || data.documents[0];
 
   return matchedBook;
 }
 
+async function fetchBooksByAuthor(author) {
+  if (!author) return [];
+
+  const headers = {
+    Authorization: `KakaoAK ${KAKAO_REST_API_KEY}`,
+  };
+
+  // 1차: person 검색
+  const response = await fetch(
+    `${KAKAO_BOOK_API_URL}?target=person&query=${encodeURIComponent(author)}&size=20`,
+    { headers }
+  );
+
+  if (!response.ok) {
+    throw new Error("작가의 다른 책 조회에 실패했습니다.");
+  }
+
+  const data = await response.json();
+  let books = data.documents || [];
+
+  // 2차: person 검색 결과가 비면 일반 검색 fallback
+  if (!books.length) {
+    const fallbackResponse = await fetch(
+      `${KAKAO_BOOK_API_URL}?query=${encodeURIComponent(author)}&size=20`,
+      { headers }
+    );
+
+    if (fallbackResponse.ok) {
+      const fallbackData = await fallbackResponse.json();
+      books = (fallbackData.documents || []).filter((item) => {
+        return item.authors?.some((name) => {
+          const a = normalizeText(name);
+          const b = normalizeText(author);
+          return a === b || a.includes(b) || b.includes(a);
+        });
+      });
+    }
+  }
+
+  return books;
+}
+
+/* =========================
+   작가의 다른 책 렌더링
+========================= */
+async function renderAuthorBooks(book) {
+  const authorBookList = document.getElementById("authorBookList");
+  if (!authorBookList) return;
+
+  const firstAuthor = book.authors?.[0];
+  if (!firstAuthor) {
+    authorBookList.textContent = "작가 정보가 없습니다.";
+    return;
+  }
+
+  try {
+    const authorBooks = await fetchBooksByAuthor(firstAuthor);
+
+    const currentIsbn = normalizeDigits(book.isbn);
+    const currentTitle = normalizeText(book.title);
+
+    const filteredBooks = authorBooks
+      .filter((item) => {
+        const itemIsbn = normalizeDigits(item.isbn);
+        const itemTitle = normalizeText(item.title);
+
+        const sameIsbn =
+          itemIsbn &&
+          currentIsbn &&
+          (itemIsbn.includes(currentIsbn) || currentIsbn.includes(itemIsbn));
+
+        const sameTitle =
+          itemTitle &&
+          currentTitle &&
+          itemTitle === currentTitle;
+
+        return !sameIsbn && !sameTitle;
+      })
+      .slice(0, 4);
+
+    if (!filteredBooks.length) {
+      authorBookList.textContent = "같은 작가의 다른 책 정보가 없습니다.";
+      return;
+    }
+
+    authorBookList.innerHTML = `
+      <ul class="author_other_book_list">
+        ${filteredBooks
+          .map((item) => {
+            const itemTitle = item.title || "제목 정보 없음";
+            const itemAuthor = item.authors?.length
+              ? item.authors.join(", ")
+              : firstAuthor;
+            const itemIsbn = getDisplayIsbn(item.isbn);
+            const itemThumb = getHighResImageUrl(item.thumbnail);
+
+            return `
+              <li class="author_other_book_item">
+                <a href="./sub.html?isbn=${encodeURIComponent(itemIsbn)}" class="author_other_book_link">
+                  <div class="author_other_book_thumb">
+                    <img src="${itemThumb}" alt="${itemTitle}">
+                  </div>
+                  <div class="author_other_book_info">
+                    <p class="author_other_book_name">${itemTitle}</p>
+                    <p class="author_other_book_author">${itemAuthor}</p>
+                  </div>
+                </a>
+              </li>
+            `;
+          })
+          .join("")}
+      </ul>
+    `;
+  } catch (error) {
+    console.error(error);
+    authorBookList.textContent = "같은 작가의 다른 책을 불러오지 못했습니다.";
+  }
+}
+
 /* =========================
    책 정보 렌더링
 ========================= */
-function renderBook(book) {
+async function renderBook(book) {
   const title = book.title || "도서명";
   const authors = book.authors?.length
     ? book.authors.join(", ")
     : "저자 정보 없음";
+  const translators = book.translators?.length
+    ? book.translators.join(", ")
+    : "-";
   const publisher = book.publisher || "출판사 정보 없음";
   const date = formatDate(book.datetime);
   const isbn = getDisplayIsbn(book.isbn);
@@ -99,44 +225,38 @@ function renderBook(book) {
 
   currentSalePrice = salePrice;
 
-  // 상태
+  /* ===== 상단 영역 ===== */
   const subStatus = document.getElementById("subStatus");
   if (subStatus) {
     subStatus.textContent = status;
   }
 
-  // 제목
   const subTitle = document.getElementById("subTitle");
   if (subTitle) {
     subTitle.textContent = title;
     document.title = `${title} | book_koybo`;
   }
 
-  // 메타 정보
   const subMeta = document.getElementById("subMeta");
   if (subMeta) {
     subMeta.textContent = `${authors} · ${publisher} · ${date}`;
   }
 
-  // ISBN
   const subIsbn = document.getElementById("subIsbn");
   if (subIsbn) {
     subIsbn.textContent = `ISBN ${isbn}`;
   }
 
-  // 책 소개 위 / 아래 둘 다
   const subContents = document.getElementById("subContents");
-  const subContentsDetail = document.getElementById("subContentsDetail");
-
   if (subContents) {
     subContents.textContent = contents;
   }
 
+  const subContentsDetail = document.getElementById("subContentsDetail");
   if (subContentsDetail) {
     subContentsDetail.textContent = contents;
   }
 
-  // 표지 이미지
   const subCoverArea = document.getElementById("subCoverArea");
   if (subCoverArea) {
     subCoverArea.innerHTML = `
@@ -146,19 +266,56 @@ function renderBook(book) {
     `;
   }
 
-  // 가격
+  const subTabSalePrice = document.getElementById("subTabSalePrice");
+  const subMainSalePrice = document.getElementById("subMainSalePrice");
   const subPrice = document.getElementById("subPrice");
-  const subSalePrice = document.getElementById("subSalePrice");
+
+  if (subTabSalePrice) {
+    subTabSalePrice.textContent = formatPrice(salePrice);
+  }
+
+  if (subMainSalePrice) {
+    subMainSalePrice.textContent = formatPrice(salePrice);
+  }
 
   if (subPrice) {
     subPrice.textContent = formatPrice(price || salePrice);
   }
 
-  if (subSalePrice) {
-    subSalePrice.textContent = formatPrice(salePrice);
+  /* ===== 하단 상세 정보 ===== */
+  const subAuthor = document.getElementById("subAuthor");
+  const subTranslator = document.getElementById("subTranslator");
+  const subPublisherDetail = document.getElementById("subPublisherDetail");
+  const subPubDateDetail = document.getElementById("subPubDateDetail");
+  const subIsbnDetail = document.getElementById("subIsbnDetail");
+  const subBookStatus = document.getElementById("subBookStatus");
+
+  if (subAuthor) {
+    subAuthor.textContent = authors;
+  }
+
+  if (subTranslator) {
+    subTranslator.textContent = translators;
+  }
+
+  if (subPublisherDetail) {
+    subPublisherDetail.textContent = publisher;
+  }
+
+  if (subPubDateDetail) {
+    subPubDateDetail.textContent = date;
+  }
+
+  if (subIsbnDetail) {
+    subIsbnDetail.textContent = isbn;
+  }
+
+  if (subBookStatus) {
+    subBookStatus.textContent = status;
   }
 
   updateTotalPrice();
+  await renderAuthorBooks(book);
 }
 
 /* =========================
@@ -200,16 +357,81 @@ function bindQuantityButtons() {
    하단 탭 active 처리
 ========================= */
 function bindDetailTabs() {
-  const tabButtons = document.querySelectorAll(".detail_tab_menu button");
+  const tabButtons = document.querySelectorAll(".detail_tab_menu .detail_tab");
+  const panels = document.querySelectorAll(".sub_detail_contents .detail_panel");
 
-  if (!tabButtons.length) return;
+  if (!tabButtons.length || !panels.length) return;
 
-  tabButtons.forEach((button) => {
+  tabButtons.forEach((button, index) => {
     button.addEventListener("click", () => {
       tabButtons.forEach((btn) => btn.classList.remove("active"));
+      panels.forEach((panel) => panel.classList.remove("active"));
+
       button.classList.add("active");
+
+      if (panels[index]) {
+        panels[index].classList.add("active");
+      }
     });
   });
+}
+
+/* =========================
+   에러 화면 처리
+========================= */
+function renderErrorState(message) {
+  const subTitle = document.getElementById("subTitle");
+  const subContents = document.getElementById("subContents");
+  const subContentsDetail = document.getElementById("subContentsDetail");
+  const subCoverArea = document.getElementById("subCoverArea");
+  const subTabSalePrice = document.getElementById("subTabSalePrice");
+  const subMainSalePrice = document.getElementById("subMainSalePrice");
+  const subPrice = document.getElementById("subPrice");
+  const totalPrice = document.getElementById("totalPrice");
+
+  const subAuthor = document.getElementById("subAuthor");
+  const subTranslator = document.getElementById("subTranslator");
+  const subPublisherDetail = document.getElementById("subPublisherDetail");
+  const subPubDateDetail = document.getElementById("subPubDateDetail");
+  const subIsbnDetail = document.getElementById("subIsbnDetail");
+  const subBookStatus = document.getElementById("subBookStatus");
+  const authorBookList = document.getElementById("authorBookList");
+
+  if (subTitle) {
+    subTitle.textContent = "도서 정보를 불러오지 못했습니다.";
+  }
+
+  if (subContents) {
+    subContents.textContent = message;
+  }
+
+  if (subContentsDetail) {
+    subContentsDetail.textContent = message;
+  }
+
+  if (subCoverArea) {
+    subCoverArea.innerHTML = `
+      <div class="sub_cover_img_box">
+        <img src="./img/common/no-image.jpg" alt="이미지 없음">
+      </div>
+    `;
+  }
+
+  if (subTabSalePrice) subTabSalePrice.textContent = "0원";
+  if (subMainSalePrice) subMainSalePrice.textContent = "0원";
+  if (subPrice) subPrice.textContent = "0원";
+  if (totalPrice) totalPrice.textContent = "0원";
+
+  if (subAuthor) subAuthor.textContent = "-";
+  if (subTranslator) subTranslator.textContent = "-";
+  if (subPublisherDetail) subPublisherDetail.textContent = "-";
+  if (subPubDateDetail) subPubDateDetail.textContent = "-";
+  if (subIsbnDetail) subIsbnDetail.textContent = "-";
+  if (subBookStatus) subBookStatus.textContent = "-";
+
+  if (authorBookList) {
+    authorBookList.textContent = "같은 작가의 다른 책 정보를 불러오지 못했습니다.";
+  }
 }
 
 /* =========================
@@ -227,35 +449,122 @@ async function initSubPage() {
     }
 
     const book = await fetchBookByIsbn(isbn);
-    renderBook(book);
+    await renderBook(book);
   } catch (error) {
     console.error("sub 페이지 초기화 오류:", error);
-
-    const subTitle = document.getElementById("subTitle");
-    const subContents = document.getElementById("subContents");
-    const subContentsDetail = document.getElementById("subContentsDetail");
-    const subCoverArea = document.getElementById("subCoverArea");
-
-    if (subTitle) {
-      subTitle.textContent = "도서 정보를 불러오지 못했습니다.";
-    }
-
-    if (subContents) {
-      subContents.textContent = error.message;
-    }
-
-    if (subContentsDetail) {
-      subContentsDetail.textContent = error.message;
-    }
-
-    if (subCoverArea) {
-      subCoverArea.innerHTML = `
-        <div class="sub_cover_img_box">
-          <img src="./img/common/no-image.jpg" alt="이미지 없음">
-        </div>
-      `;
-    }
+    renderErrorState(error.message);
   }
 }
 
 document.addEventListener("DOMContentLoaded", initSubPage);
+
+/* =========================
+   review
+========================= */
+function getScoreText(score) {
+  return `${score}점`;
+}
+
+function renderReviewSummary(summary) {
+  const averageEl = document.getElementById("reviewAverage");
+  const totalCountEl = document.getElementById("reviewTotalCount");
+
+  if (averageEl) {
+    averageEl.textContent = Number(summary.averageScore || 0).toFixed(1);
+  }
+
+  if (totalCountEl) {
+    totalCountEl.textContent = `${summary.totalCount || 0}개`;
+  }
+}
+
+function renderReviewKeywords(keywords) {
+  const keywordListEl = document.getElementById("reviewKeywordList");
+  if (!keywordListEl) return;
+
+  if (!keywords || !keywords.length) {
+    keywordListEl.innerHTML = "";
+    return;
+  }
+
+  keywordListEl.innerHTML = keywords
+    .map(
+      (item) => `
+        <div class="review_keyword_item">
+          <span class="review_keyword_label">${item.label}</span>
+          <strong class="review_keyword_percent">${item.percent}%</strong>
+        </div>
+      `
+    )
+    .join("");
+}
+
+function renderReviewList(reviews) {
+  const reviewListEl = document.getElementById("reviewList");
+  if (!reviewListEl) return;
+
+  if (!reviews || !reviews.length) {
+    reviewListEl.innerHTML = `<div class="review_empty">등록된 리뷰가 없습니다.</div>`;
+    return;
+  }
+
+  reviewListEl.innerHTML = reviews
+    .map(
+      (review) => `
+        <div class="review_item">
+          <div class="review_item_top">
+            <div class="review_user_meta">
+              <span class="review_user_type">${review.type}</span>
+              <span class="review_user_id">${review.user}</span>
+              <span class="review_date">${review.date}</span>
+            </div>
+            <div class="review_score">${getScoreText(review.score)}</div>
+          </div>
+          <div class="review_keyword_badge">${review.keyword}</div>
+          <p class="review_content">${review.content}</p>
+        </div>
+      `
+    )
+    .join("");
+}
+
+function loadReviewsFromJs() {
+  const currentBookReview = window.COMMON_REVIEW_DATA || {};
+
+  renderReviewSummary(currentBookReview.summary || {});
+  renderReviewKeywords(currentBookReview.keywords || []);
+  renderReviewList(currentBookReview.reviews || []);
+}
+
+document.addEventListener("DOMContentLoaded", function () {
+  loadReviewsFromJs();
+});
+
+function initDetailTabScroll() {
+  const tabs = document.querySelectorAll(".detail_tab");
+
+  if (!tabs.length) return;
+
+  tabs.forEach((tab) => {
+    tab.addEventListener("click", () => {
+      const targetSelector = tab.dataset.target;
+      const target = document.querySelector(targetSelector);
+
+      if (!target) return;
+
+      tabs.forEach((btn) => btn.classList.remove("active"));
+      tab.classList.add("active");
+
+      const targetTop = target.getBoundingClientRect().top + window.pageYOffset - 100;
+
+      window.scrollTo({
+        top: targetTop,
+        behavior: "smooth"
+      });
+    });
+  });
+}
+
+document.addEventListener("DOMContentLoaded", function () {
+  initDetailTabScroll();
+});

@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-widthsub.html?isbn=9791185851204, initial-scale=1.0">
     <title>book_koybo</title>
 
     <link rel="stylesheet" href="./css/reset.css">
@@ -33,14 +33,12 @@
                     <div class="sub_title_box">
                         <h2 class="sub_book_title" id="subTitle">도서명</h2>
                     </div>
-
-                    <button type="button" class="sub_share_btn" aria-label="공유하기">⤴</button>
                 </div>
 
                 <div class="sub_type_tabs">
                     <button type="button" class="type_tab active">
                         <span class="type_name">국내도서</span>
-                        <span class="type_price" id="subSalePrice">0원</span>
+                        <span class="type_price" id="subTabSalePrice">0원</span>
                     </button>
 
                     <button type="button" class="type_tab">
@@ -63,14 +61,14 @@
 
                     <div class="meta_badge_row">
                         <span class="meta_best_badge">BOOK</span>
-                        <span class="meta_best_text">상세 정보</span>
+                        <span class="meta_best_text">주간 베스트</span>
                     </div>
 
                     <div class="meta_review_box">
                         <div class="meta_review_item">
                             <strong class="review_score">9.9</strong>
                             <p class="review_label">평점</p>
-                            <span class="review_sub">(샘플 UI)</span>
+                            <span class="review_sub">(리뷰 평점))</span>
                         </div>
 
                         <div class="meta_review_divider"></div>
@@ -78,14 +76,20 @@
                         <div class="meta_review_item">
                             <strong class="review_keyword">좋아요</strong>
                             <p class="review_label">구매자 반응</p>
-                            <span class="review_sub">(샘플 UI)</span>
+                            <span class="review_sub">(구매자 리뷰)</span>
                         </div>
                     </div>
                 </aside>
 
                 <!-- center cover -->
                 <section class="sub_cover_center">
-                    <div class="sub_cover_image_box" id="subCoverArea"></div>
+                    <div class="sub_cover_visual">
+                        <button type="button" class="sub_share_btn" aria-label="공유하기">
+                            <img src="./img/sub/icon-shared.png" alt="공유하기">
+                        </button>
+
+                        <div class="sub_cover_image_box" id="subCoverArea"></div>
+                    </div>
 
                     <div class="sub_cover_pager">
                         <button type="button" class="pager_btn" aria-label="이전">‹</button>
@@ -112,7 +116,7 @@
                     <div class="purchase_price_box">
                         <p class="purchase_price_main">
                             <span class="discount_rate">SALE</span>
-                            <strong class="sale_price" id="subSalePrice">0원</strong>
+                            <strong class="sale_price" id="subMainSalePrice">0원</strong>
                             <span class="origin_price" id="subPrice">0원</span>
                         </p>
                     </div>
@@ -120,7 +124,7 @@
                     <div class="purchase_info_list">
                         <div class="purchase_info_row">
                             <span class="info_title">적립/혜택</span>
-                            <span class="info_value point">적립 예정</span>
+                            <span class="info_value point">890P</span>
                         </div>
 
                         <div class="purchase_info_row">
@@ -175,21 +179,166 @@
             <!-- detail section -->
             <section class="sub_detail_section">
                 <div class="sub_detail_tab_menu detail_tab_menu">
-                    <button type="button" class="detail_tab active">책소개</button>
-                    <button type="button" class="detail_tab">리뷰</button>
-                    <button type="button" class="detail_tab">교환/반품</button>
+                    <button type="button" class="detail_tab active" data-target="#detail-info">상세정보</button>
+                    <button type="button" class="detail_tab" data-target="#detail-review">리뷰</button>
+                    <button type="button" class="detail_tab" data-target="#detail-policy">교환/반품/품절</button>
                 </div>
 
                 <div class="sub_detail_contents">
-                    <article class="detail_panel active">
-                        <h3 class="detail_title">책 소개</h3>
-                        <p class="detail_text" id="subContents"></p>
+
+                    <!-- 1. 상세정보 -->
+                    <article class="detail_panel active" id="detail-info">
+
+                        <!-- 상세페이지 이미지 -->
+                        <!-- <section class="detail_visual_block">
+                            <div class="detail_visual_img" id="subDetailImageArea">
+                                <img src="./img/sub/sub_book01.jpg" alt="도서 상세 이미지">
+                            </div>
+                        </section> -->
+
+                        <!-- 책소개 -->
+                        <section class="detail_intro_block">
+                            <h3 class="detail_title">책소개</h3>
+                            <p class="detail_text" id="subContents">
+                                책 소개 내용이 들어가는 영역입니다.
+                            </p>
+                        </section>
+
+                        <!-- 도서정보 -->
+                        <section class="detail_intro_block">
+                            <h3 class="detail_title">도서정보</h3>
+                            <ul class="detail_info_list">
+                                <li>
+                                    <strong>출판사</strong>
+                                    <span id="subPublisherDetail">-</span>
+                                </li>
+                                <li>
+                                    <strong>출간일</strong>
+                                    <span id="subPubDateDetail">-</span>
+                                </li>
+                                <li>
+                                    <strong>ISBN</strong>
+                                    <span id="subIsbnDetail">-</span>
+                                </li>
+                                <li>
+                                    <strong>판매 상태</strong>
+                                    <span id="subBookStatus">-</span>
+                                </li>
+                                <li>
+                                    <strong>상세 링크</strong>
+                                    <span>
+                                        <a id="subBookUrl" href="#" target="_blank" rel="noopener">
+                                            도서 상세 페이지 보기
+                                        </a>
+                                    </span>
+                                </li>
+                            </ul>
+                        </section>
+
+                        <!-- 작가 정보 -->
+                        <section class="detail_intro_block">
+                            <h3 class="detail_title">작가 정보</h3>
+                            <ul class="detail_info_list">
+                                <li>
+                                    <strong>저자</strong>
+                                    <span id="subAuthor">-</span>
+                                </li>
+                                <li>
+                                    <strong>번역</strong>
+                                    <span id="subTranslator">-</span>
+                                </li>
+                            </ul>
+                        </section>
+
+                        <!-- 작가의 다른 책 -->
+                        <section class="detail_intro_block">
+                            <h3 class="detail_title">작가의 다른 책</h3>
+                            <div id="authorBookList"></div>
+                        </section>
+
                     </article>
 
-                    <article class="detail_panel active">
-                        <h3 class="detail_title">상세 소개</h3>
-                        <p class="detail_text" id="subContentsDetail"></p>
+                    <!-- 2. 리뷰 -->
+                    <article class="detail_panel" id="detail-review">
+                        <section class="detail_intro_block review_block">
+                            <div class="review_head">
+                                <div class="review_head_left">
+                                    <h3 class="detail_title">리뷰</h3>
+                                    <p class="detail_text">구매자들이 남긴 후기를 확인해보세요.</p>
+                                </div>
+
+                                <div class="review_score_summary">
+                                    <strong id="reviewAverage">0.0</strong>
+                                    <span>10점 만점</span>
+                                    <em id="reviewTotalCount">0개</em>
+                                </div>
+                            </div>
+
+                            <div class="review_keyword_list" id="reviewKeywordList"></div>
+                            <div class="review_list" id="reviewList"></div>
+                        </section>
                     </article>
+
+
+
+                    <!-- 3. 교환 / 반품 / 품절 -->
+                    <article class="detail_panel" id="detail-policy">
+                        <section class="detail_intro_block">
+                            <h3 class="detail_title">반품/교환방법</h3>
+                            <p class="detail_text">
+                                마이룸 > 주문관리 > 주문/배송내역 > 주문조회 > 반품/교환 신청, [1:1 상담 > 반품/교환/환불] 또는 고객센터 (1544-1900) <br />
+                                * 오픈마켓, 해외배송 주문, 기프트 주문시 [1:1 상담>반품/교환/환불] 또는 고객센터 (1544-1900)
+                            </p>
+                        </section>
+
+                        <section class="detail_intro_block">
+                            <h3 class="detail_title">반품/교환가능 기간 및 비용</h3>
+                            <p class="detail_text">
+                                변심반품의 경우 수령 후 7일 이내,<br />
+                                상품의 결함 및 계약내용과 다를 경우 문제점 발견 후 30일 이내<br />
+                                변심 혹은 구매착오로 인한 반품/교환은 반송료 고객부담
+                            </p>
+                        </section>
+
+                        <section class="detail_intro_block">
+                            <h3 class="detail_title">반품/교환 불가 사유</h3>
+                            <p class="detail_text">
+                                1) 소비자의 책임 있는 사유로 상품 등이 손실 또는 훼손된 경우<br />
+                                (단지 확인을 위한 포장 훼손은 제외)<br />
+                                2) 소비자의 사용, 포장 개봉에 의해 상품 등의 가치가 현저히 감소한 경우<br />
+                                예) 화장품, 식품, 가전제품(악세서리 포함) 등<br />
+                                3) 복제가 가능한 상품 등의 포장을 훼손한 경우<br />
+                                예) 음반/DVD/비디오, 소프트웨어, 만화책, 잡지, 영상 화보집<br />
+                                4) 소비자의 요청에 따라 개별적으로 주문 제작되는 상품의 경우 ((1)해외주문도서)<br />
+                                5) 디지털 컨텐츠인 ebook, 오디오북 등을 1회이상 ‘다운로드’를 받았거나 '바로보기'로 열람한 경우<br />
+                                6) 시간의 경과에 의해 재판매가 곤란한 정도로 가치가 현저히 감소한 경우<br />
+                                7) 전자상거래 등에서의 소비자보호에 관한 법률이 정하는 소비자 청약철회 제한 내용에 해당되는 경우<br />
+                                8) 세트상품 일부만 반품 불가 (필요시 세트상품 반품 후 낱권 재구매)<br />
+                                9) 기타 반품 불가 품목 - 잡지, 테이프, 대학입시자료, 사진집, 방통대 교재, 교과서, 만화, 미디어전품목, 악보집, 정부간행물, 지도, 각종
+                                <br />수험서, 적성검사자료, 성경, 사전, 법령집, 지류, 필기구류, 시즌상품, 개봉한 상품 등
+                            </p>
+                        </section>
+                        <section class="detail_intro_block">
+                            <h3 class="detail_title">상품 품절</h3>
+                            <p class="detail_text">
+                                공급사(출판사) 재고 사정에 의해 품절/지연될 수 있으며, 품절 시 관련 사항에 대해서는 이메일과 문자로 안내드리겠습니다.
+                            </p>
+                        </section>
+                        <section class="detail_intro_block">
+                            <h3 class="detail_title">소비자 피해보상 환불 지연에 따른 배상</h3>
+                            <p class="detail_text">
+                                1) 상품의 불량에 의한 교환, A/S, 환불, 품질보증 및 피해보상 등에 관한 사항은 소비자분쟁 해결 기준 (공정거래위원회 고시)에 준하여 처리됨
+                                2) 대금 환불 및 환불지연에 따른 배상금 지급 조건, 절차 등은 전자상거래 등에서의 소비자 보호에 관한 법률에 따라 처리함
+                            </p>
+                        </section>
+                        <section class="detail_intro_block">
+                            <p class="detail_text">상품 설명에 반품/교환 관련한 안내가 있는 경우 그 내용을 우선으로 합니다. (업체 사정에 따라 달라질 수 있습니다.)
+                            </p>p>
+                        </section>
+
+
+                    </article>
+
                 </div>
             </section>
 
@@ -199,8 +348,9 @@
     <div id="footer-include"></div>
 
     <script src="./js/header.js"></script>
-    <script src="./js/footer.js"></script>
     <script src="./js/common.js"></script>
+    <script src="./js/review.js"></script>
+    <script src="./js/footer.js"></script>
     <script src="./js/sub.js"></script>
 </body>
 

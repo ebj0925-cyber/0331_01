@@ -70,7 +70,8 @@
     color: #555;
 }
 .header_icons a:hover { color: #4d6db8; }
-/* ========================= gnb ========================= */ .gnb { border-bottom: 1px solid #ddd; background: #fff; }
+/* ========================= gnb ========================= */ 
+.gnb { border-bottom: 1px solid #ddd; background: #fff; }
 .gnb_inner { height: 56px; display: flex; align-items: center; }
 .all_menu_btn {
     width: 44px;

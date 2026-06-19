@@ -290,7 +290,53 @@ npx serve .
 
 ## Portfolio
 
-- [PPT 다운로드](./portfolio/Kyobo_Book_Clone_Portfolio.pptx)
+- [PPT 다운로드](./portfolio/Kyobo_Book_Clone_Portfolio_3.pptx)
+- [PDF 보기](./portfolio/Kyobo_Book_Clone_Portfolio_3.pdf)
+
+### Preview
+
+<img src="./portfolio/ppt_kyobo_img/슬라이드1.PNG" width="800" />
+<img src="./portfolio/ppt_kyobo_img/슬라이드2.PNG" width="800" />
+<img src="./portfolio/ppt_kyobo_img/슬라이드3.PNG" width="800" />
+<img src="./portfolio/ppt_kyobo_img/슬라이드4.PNG" width="800" />
+<img src="./portfolio/ppt_kyobo_img/슬라이드5.PNG" width="800" />
+<img src="./portfolio/ppt_kyobo_img/슬라이드6.PNG" width="800" />
+<img src="./portfolio/ppt_kyobo_img/슬라이드7.PNG" width="800" />
+<img src="./portfolio/ppt_kyobo_img/슬라이드8.PNG" width="800" />
+<img src="./portfolio/ppt_kyobo_img/슬라이드9.PNG" width="800" />
+<img src="./portfolio/ppt_kyobo_img/슬라이드10.PNG" width="800" />
+<img src="./portfolio/ppt_kyobo_img/슬라이드11.PNG" width="800" />
+<img src="./portfolio/ppt_kyobo_img/슬라이드12.PNG" width="800" />
+<img src="./portfolio/ppt_kyobo_img/슬라이드13.PNG" width="800" />
+<img src="./portfolio/ppt_kyobo_img/슬라이드14.PNG" width="800" />
+<img src="./portfolio/ppt_kyobo_img/슬라이드15.PNG" width="800" />
+<img src="./portfolio/ppt_kyobo_img/슬라이드16.PNG" width="800" />
+<img src="./portfolio/ppt_kyobo_img/슬라이드17.PNG" width="800" />
+<img src="./portfolio/ppt_kyobo_img/슬라이드18.PNG" width="800" />
+<img src="./portfolio/ppt_kyobo_img/슬라이드19.PNG" width="800" />
+<img src="./portfolio/ppt_kyobo_img/슬라이드20.PNG" width="800" />
+<img src="./portfolio/ppt_kyobo_img/슬라이드21.PNG" width="800" />
+<img src="./portfolio/ppt_kyobo_img/슬라이드22.PNG" width="800" />
+<img src="./portfolio/ppt_kyobo_img/슬라이드23.PNG" width="800" />
+<img src="./portfolio/ppt_kyobo_img/슬라이드24.PNG" width="800" />
+<img src="./portfolio/ppt_kyobo_img/슬라이드25.PNG" width="800" />
+<img src="./portfolio/ppt_kyobo_img/슬라이드26.PNG" width="800" />
+<img src="./portfolio/ppt_kyobo_img/슬라이드27.PNG" width="800" />
+<img src="./portfolio/ppt_kyobo_img/슬라이드28.PNG" width="800" />
+<img src="./portfolio/ppt_kyobo_img/슬라이드29.PNG" width="800" />
+<img src="./portfolio/ppt_kyobo_img/슬라이드30.PNG" width="800" />
+<img src="./portfolio/ppt_kyobo_img/슬라이드31.PNG" width="800" />
+<img src="./portfolio/ppt_kyobo_img/슬라이드32.PNG" width="800" />
+<img src="./portfolio/ppt_kyobo_img/슬라이드33.PNG" width="800" />
+<img src="./portfolio/ppt_kyobo_img/슬라이드34.PNG" width="800" />
+<img src="./portfolio/ppt_kyobo_img/슬라이드35.PNG" width="800" />
+<img src="./portfolio/ppt_kyobo_img/슬라이드36.PNG" width="800" />
+<img src="./portfolio/ppt_kyobo_img/슬라이드37.PNG" width="800" />
+<img src="./portfolio/ppt_kyobo_img/슬라이드38.PNG" width="800" />
+<img src="./portfolio/ppt_kyobo_img/슬라이드39.PNG" width="800" />
+<img src="./portfolio/ppt_kyobo_img/슬라이드40.PNG" width="800" />
+
+
 
 ### Preview
 
